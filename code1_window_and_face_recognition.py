@@ -15,17 +15,25 @@ from tkinter import ttk
 from tkinter import IntVar
 import xlrd
 
+# ------------------------------------ config ------------------------------------
+image_path = r"D:\Users\AiEnigma\Desktop\Projects\TaiTouLv_Jiance\output\camera.jpg"
+
+# xlrd no longer support .xlsx file. Resave the data sheet as .xls file.
+data_path = r"D:\Users\AiEnigma\Desktop\Projects\TaiTouLv_Jiance\py_excel.xls"
+
+# ------------------------------------ config ------------------------------------
+
 ##GUI代码
 window = tk.Tk()  # 这是一个窗口object
 window.title('抬头率监测系统')
 window.geometry('600x400')  # 窗口大小
 
-
 def read_data():
-    path = r'C:\Users\10485\Desktop\head_detecting\py_excel.xlsx'
+
+    
 
     # 打开文件
-    data = xlrd.open_workbook(path)
+    data = xlrd.open_workbook(data_path)
     # path + '/' +file 是文件的完整路径
     # 获取表格数目
     # nums = len(data.sheets())
@@ -94,8 +102,7 @@ course_time_chosen.grid(column=0, row=2, sticky='e')
 
 pic_tip = tk.Label(window, text="所选教室时实图像", width=16, height=2, font=("黑体", 12)).grid(column=1, row=2, sticky='s')
 
-img = r'C:\Users\10485\Desktop\head_detecting\faces\1.jpg'
-img_open = Image.open(img)
+img_open = Image.open(image_path)
 # 显示图片的代码
 (x, y) = img_open.size  # read image size
 x_s = 200  # define standard width

@@ -1,0 +1,1 @@
+pip install numpy opencv-python dlib scikit-image xlrd openpyxl pillow<10.0.0
