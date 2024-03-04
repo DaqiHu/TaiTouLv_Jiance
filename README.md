@@ -25,16 +25,16 @@
 ### 代码功能介绍
 本文档中仅介绍.ipython文件，对应的.py文件不再赘述，内容都是一样的。
 
-#### [camera.ipynb](./camera.ipynb)
+#### [camera.ipynb](./src/ipynb/camera.ipynb)
 此代码实现了调用摄像头以截取某一时刻的图像，并将其储存在本地的功能。
 
-#### [code0_initial.ipynb](./code0_initial.ipynb)
+#### [code0_initial.ipynb](./src/ipynb/code0_initial.ipynb)
 这个代码就是最原始的主体代码，人脸识别部分主要参考了dlib的一个样例程序，代码里还保留着一些原始的英文注释，讲解了一下环境配置中可能出现的问题，有兴趣的可以看一看。
 
-#### [code1_window_and_face_recognition.py.ipynb](./code1_window_and_face_recognition.py.ipynb)
+#### [code1_window_and_face_recognition.py.ipynb](./src/ipynb/code1_window_and_face_recognition.py.ipynb)
 此代码是第一个较为完整地代码，已经可以完整地运行出来，并带了UI界面。
 
-#### [code2_password_final.ipynb](./code2_password_final.ipynb)
+#### [code2_password_final.ipynb](./src/ipynb/code2_password_final.ipynb)
 正如这个代码的文件名，它就是在上一个版本的代码中加入了登录界面，并完善了代码的各项功能，是本系统最终使用的代码。嫌麻烦的完全可以不看前两个版本的代码，直接看这个最终版就行。
 
 代码主要由三大部分组成：界面代码、人脸检测代码以及数据调用代码。
@@ -74,17 +74,17 @@ def inspect():  ## 声明一个函数
 
 首先是登录界面：
 
-![登录界面](./sample1.png)
+![登录界面](./attachment/sample1.png)
 
 因为时间原因，本系统并未真正实现密码验证功能，有兴趣的小伙伴可以结合mysql数据库等等来实现这一功能。
 
 其次是系统的初始化界面，也就是登录之后会跳转到的界面：
 
-![初始化界面](./sample2.png)
+![初始化界面](./attachment/sample2.png)
 
 最后就是抬头率的结果展示画面，在选取了相应的教室和时间后，依次点击界面上的两个按钮，就可以显示出抬头率，并在侧面显示出教室的实时图像：
 
-![展示界面](./sample3.png)
+![展示界面](./attachment/sample3.png)
 
 ## 参考资料
 本系统只是简单地实现了一个功能齐全的抬头率检测管理系统，但是并未对各项功能的准确率和效率进行优化，如果有对准确率和效率有更高要求的小伙伴，可以去找一些相关的人脸识别的参考文献，本仓库中附带了一篇本人看过的文献，思路与我的这个系统较为类似，但是做的更加深入、细致，也有各种准确率等等的指标，文章已经附在仓库中，点击[链接](./reference/面向大学课堂的抬头率检测系统的研究与实现_张杰.caj)即可获得全文。

@@ -15,6 +15,8 @@ from tkinter import ttk
 from tkinter import IntVar
 import xlrd
 
+import config
+
 
 # In[2]:
 
@@ -24,8 +26,8 @@ root = tk.Tk()
 root.title('欢迎进入北邮抬头率检测系统！')
 root.geometry('600x420')
 #增加背景图片
-img = Image.open(r"C:\Users\10485\Desktop\head_detecting\bupt.jpg")
-img2 = img.resize((600, 420), Image.ANTIALIAS)
+img = Image.open(config.background)
+img2 = img.resize((600, 420), Image.Resampling.LANCZOS)
 photo = ImageTk.PhotoImage(img2)
 theLabel = tk.Label(root,
                  text="",#内容
@@ -49,7 +51,7 @@ def get_in():
     window.geometry('600x400')  # 窗口大小
 
     def read_data():
-        path = r'C:\Users\10485\Desktop\head_detecting\py_excel.xlsx'
+        path = config.data_path
 
         # 打开文件
         data = xlrd.open_workbook(path)
@@ -109,13 +111,13 @@ def get_in():
 
     pic_tip = tk.Label(window, text="所选教室时实图像", width=16, height=2, font=("黑体", 12)).grid(column=1, row=2, sticky='s')
 
-    img = r'C:\Users\10485\Desktop\head_detecting\faces\start.jpg'##初始化图片界面
+    img = config.face_start_image
     img_open = Image.open(img)
     # 显示图片的代码
     (x, y) = img_open.size  # read image size
     x_s = 200  # define standard width
     y_s = y * x_s // x  # calc height based on standard width
-    img_adj = img_open.resize((x_s, y_s), Image.ANTIALIAS)
+    img_adj = img_open.resize((x_s, y_s), Image.Resampling.LANCZOS)
     img_png = ImageTk.PhotoImage(img_adj)
 
     Image2 = tk.Label(window, bg='white', bd=20, height=y_s * 0.83, width=x_s * 0.83,
@@ -147,7 +149,7 @@ def get_in():
             nonlocal face
             str1 = "教室"
             str2 = "课上的抬头率为："
-            path = r'C:\Users\10485\Desktop\head_detecting\faces'
+            path = config.faces_folder
             pic_path = str(class_room_chosen.get()) + str(course_time_chosen.get()) + '.jpg'
             p = path + '/' + pic_path
             img = cv2.imread(p)
@@ -155,27 +157,25 @@ def get_in():
 
             grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-            classfier = cv2.CascadeClassifier(
-                r"C:\Users\10485\Desktop\head_detecting\haarcascade_frontalface_alt2.xml")
+            classfier = cv2.CascadeClassifier(config.classifier_data)
             faceRects = classfier.detectMultiScale(grey, scaleFactor=1.2, minNeighbors=3, minSize=(32, 32))
             a = len(faceRects)
             face = a
             str3 = str(a)
         inspect()
-        path = r'C:\Users\10485\Desktop\head_detecting\py_excel.xlsx'
+        path = config.data_path
         data = xlrd.open_workbook(path)
         sheet1 = data.sheet_by_name('Sheet1')
         nrows = sheet1.nrows  # 行
         ncols = sheet1.ncols  # 列
         total = 0
         for i in range(nrows):
-            if (sheet1.cell(i, 0).value == class_room_chosen.get() and sheet1.cell(i,
-                                                                                   1).value == course_time_chosen.get()):
+            if (sheet1.cell(i, 0).value == class_room_chosen.get() and sheet1.cell(i, 1).value == course_time_chosen.get()):
                 total = sheet1.cell(i, 2).value
         print(total)
         global rate
         print(face)
-        rate = face /total
+        rate = face / total
         print(rate)
         str1 = "教室"
         str2 = "课上的抬头率为："
@@ -185,7 +185,7 @@ def get_in():
     def pic_re():
         if (flag.get() == 0):
             pic_path = str(class_room_chosen.get()) + str(course_time_chosen.get()) + '.jpg'
-            img = os.path.join(r'C:\Users\10485\Desktop\head_detecting\faces', pic_path) #图片的命名需按规则来命名，具体规则可参考示例图片名称
+            img = os.path.join(config.faces_folder, pic_path) #图片的命名需按规则来命名，具体规则可参考示例图片名称
             img_open = Image.open(img)
             # 显示图片的代码
             (x, y) = img_open.size  # read image size
@@ -193,7 +193,7 @@ def get_in():
             global y_s
             x_s = 200  # define standard width
             y_s = y * x_s // x  # calc height based on standard width
-            img_adj = img_open.resize((x_s, y_s), Image.ANTIALIAS)
+            img_adj = img_open.resize((x_s, y_s), Image.Resampling.LANCZOS)
             global img_png  ##这里一定要设置为全局变量，不然图片无法正常显示！！！！！！！！！！！
             img_png = ImageTk.PhotoImage(img_adj)
             Image2.configure(image=img_png)

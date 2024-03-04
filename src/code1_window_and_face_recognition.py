@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[14]:
-
 
 import cv2
 import numpy as np
@@ -15,13 +13,7 @@ from tkinter import ttk
 from tkinter import IntVar
 import xlrd
 
-# ------------------------------------ config ------------------------------------
-image_path = r"D:\Users\AiEnigma\Desktop\Projects\TaiTouLv_Jiance\output\camera.jpg"
-
-# xlrd no longer support .xlsx file. Resave the data sheet as .xls file.
-data_path = r"D:\Users\AiEnigma\Desktop\Projects\TaiTouLv_Jiance\py_excel.xls"
-
-# ------------------------------------ config ------------------------------------
+import config
 
 ##GUI代码
 window = tk.Tk()  # 这是一个窗口object
@@ -33,7 +25,7 @@ def read_data():
     
 
     # 打开文件
-    data = xlrd.open_workbook(data_path)
+    data = xlrd.open_workbook(config.data_path)
     # path + '/' +file 是文件的完整路径
     # 获取表格数目
     # nums = len(data.sheets())
@@ -78,14 +70,6 @@ gettime()
 
 
 
-
-
-
-
-
-# In[ ]:
-
-
 # 选择教室标签加下拉菜单
 choose_classroom = tk.Label(window, text="选择教室", width=15, height=2, font=("黑体", 12)).grid(column=0, row=1, sticky='w')
 class_room = tk.StringVar()
@@ -102,12 +86,12 @@ course_time_chosen.grid(column=0, row=2, sticky='e')
 
 pic_tip = tk.Label(window, text="所选教室时实图像", width=16, height=2, font=("黑体", 12)).grid(column=1, row=2, sticky='s')
 
-img_open = Image.open(image_path)
+img_open = Image.open(config.image_path)
 # 显示图片的代码
 (x, y) = img_open.size  # read image size
 x_s = 200  # define standard width
 y_s = y * x_s // x  # calc height based on standard width
-img_adj = img_open.resize((x_s, y_s), Image.ANTIALIAS)
+img_adj = img_open.resize((x_s, y_s), Image.Resampling.LANCZOS)
 img_png = ImageTk.PhotoImage(img_adj)
 
 Image2 = tk.Label(window, bg='white', bd=20, height=y_s * 0.83, width=x_s * 0.83,
@@ -135,7 +119,7 @@ face = 0
 
 
 def rate_cal():
-    path = r'C:\Users\10485\Desktop\head_detecting\py_excel.xlsx'
+    path = config.data_path
     data = xlrd.open_workbook(path)
     sheet1 = data.sheet_by_name('Sheet1')
     nrows = sheet1.nrows  # 行
@@ -154,7 +138,7 @@ def rate_cal():
 def pic_re():
     if (flag.get() == 0):
         pic_path = str(class_room_chosen.get()) + str(course_time_chosen.get()) + '.jpg'
-        img = os.path.join(r'C:\Users\10485\Desktop\head_detecting\faces', pic_path)
+        img = os.path.join(config.faces_folder, pic_path)
         img_open = Image.open(img)
         # 显示图片的代码
         (x, y) = img_open.size  # read image size
@@ -162,7 +146,7 @@ def pic_re():
         global y_s
         x_s = 200  # define standard width
         y_s = y * x_s // x  # calc height based on standard width
-        img_adj = img_open.resize((x_s, y_s), Image.ANTIALIAS)
+        img_adj = img_open.resize((x_s, y_s), Image.Resampling.LANCZOS)
         global img_png  ##这里一定要设置为全局变量，不然图片无法正常显示！！！！！！！！！！！
         img_png = ImageTk.PhotoImage(img_adj)
         Image2.configure(image=img_png)
@@ -172,16 +156,15 @@ def pic_re():
 def inspect():
     str1 = "教室"
     str2 = "课上的抬头人数为："
-    path = r'C:\Users\10485\Desktop\head_detecting\faces'
+    path = config.faces_folder
     pic_path = str(class_room_chosen.get()) + str(course_time_chosen.get()) + '.jpg'
-    p = path +'/'+pic_path
+    p = path + '/' + pic_path
     img = cv2.imread(p)
     color = (0, 255, 0)
 
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    classfier = cv2.CascadeClassifier(
-        r"C:\Users\10485\Desktop\head_detecting\haarcascade_frontalface_alt2.xml")
+    classfier = cv2.CascadeClassifier(config.classifier_data)
     faceRects = classfier.detectMultiScale(grey, scaleFactor=1.2, minNeighbors=3, minSize=(32, 32))
     a = len(faceRects)
     global face
@@ -202,10 +185,3 @@ rate_button = ttk.Button(window, text="Get_rate", command=rate_cal).grid(column=
 
 pic_button = ttk.Button(window, text="Updata picture", command=pic_re).grid(column=0, row=5)
 window.mainloop()
-
-
-# In[ ]:
-
-
-
-
