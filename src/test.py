@@ -1,44 +1,28 @@
-# -*- coding: utf-8 -*-
+import requests
+from lxml import html
 import os
-import sys
-from tqdm import tqdm
+from urllib.parse import urljoin
 
-# 指定要统计的目录，可以修改为你想要的目录，或者使用sys.argv[1]来接收命令行参数
-directory = r"E:\GitHub\UnrealEngine-Danta1ion\Engine\Config"
+def parse_and_download(url):
+    # 发送HTTP请求获取网页内容
+    response = requests.get(url)
+    # 解析HTML内容
+    tree = html.fromstring(response.content)
+    # 使用XPath提取链接
+    links = tree.xpath('//a/@href')
+    # 打印链接并下载文件
+    for link in links:
+        print("Link:", link)
+        if link.endswith('.jpg'):  # 只下载PDF文件，你可以根据需要修改条件
+            file_url = urljoin(url, link)
+            file_name = os.path.join("downloads", file_url.split('/')[-1])
+            with requests.get(file_url, stream=True) as r:
+                r.raise_for_status()
+                with open(file_name, 'wb') as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
 
-output_log = r"output4.log"
-
-with open(output_log, mode="w", encoding="utf-8") as f:
-    f.write("")
-
-file_count = 0
-line_count = 0
-
-def logFile(msg: str):
-    with open(output_log, mode="a", encoding="utf-8") as f:
-        f.write(msg + "\n")
-
-# 遍历目录及其子目录下的所有文件
-directories = list(os.walk(directory))
-for root, dirs, files in tqdm(directories, total=len(directories)):
-    if "Binaries" in root or "Intermediate" in root:
-        continue
-
-    for file in files:
-        # 拼接文件的完整路径
-        file_path = os.path.join(root, file)
-        # 打开文件并读取行数
-        with open(file_path, encoding="utf-8") as f:
-            try:
-                lines = len(f.readlines())
-            except UnicodeDecodeError:
-                logFile(f"{file_path} is binary, skipped.")
-                lines = -1
-            else:
-                logFile(f"{file}: {lines}")
-                line_count += lines
-                file_count += 1
-
-# 打印结果
-print(f"在目录{directory}及其子目录下，共有{file_count}个文件，总共{line_count}行代码。")
-print(f"logged in {output_log}")
+if __name__ == "__main__":
+    url = "https://book.douban.com"  # 替换成你想要解析的网页URL
+    parse_and_download(url)

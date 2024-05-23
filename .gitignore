@@ -155,3 +155,7 @@ cython_debug/
 .VSCodeCounter/
 .vscode/
 .idea/
+
+
+# custom
+runs/

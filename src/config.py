@@ -11,3 +11,6 @@ faces_folder = r"faces"
 face_start_image = r"faces\start.jpg"
 
 background = r"attachment\bupt.jpg"
+
+# yolo_detect_folder = r"\\wsl.localhost\Ubuntu\home\dantalion\GitHub\yolov7\runs\detects"
+yolo_detect_folder = r"runs\detect"
